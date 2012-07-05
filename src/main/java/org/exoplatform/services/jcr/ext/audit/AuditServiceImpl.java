@@ -61,7 +61,6 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -372,7 +371,8 @@ public class AuditServiceImpl implements AuditService, Startable
       pLastRecord =
          new TransientPropertyData(pLastRecord.getQPath(), pLastRecord.getIdentifier(),
             pLastRecord.getPersistedVersion(), pLastRecord.getType(), pLastRecord.getParentIdentifier(),
-            pLastRecord.isMultiValued(), new TransientValueData(String.valueOf(auditRecordName)));
+            pLastRecord.isMultiValued(), new TransientValueData(String.valueOf(auditRecordName)),
+            pLastRecord.getPersistedContentSize());
 
       dataManager.update(
          new ItemState(pLastRecord, ItemState.UPDATED, true, ((ItemImpl)currentItem).getInternalPath()), true);
