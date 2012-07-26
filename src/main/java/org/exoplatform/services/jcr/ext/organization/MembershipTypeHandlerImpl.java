@@ -117,7 +117,6 @@ public class MembershipTypeHandlerImpl extends JCROrgServiceHandler implements M
       return mt;
    }
 
-
    /**
     * {@inheritDoc}
     */
@@ -193,7 +192,6 @@ public class MembershipTypeHandlerImpl extends JCROrgServiceHandler implements M
 
       return types;
    }
-
 
    /**
     * {@inheritDoc}
@@ -274,6 +272,24 @@ public class MembershipTypeHandlerImpl extends JCROrgServiceHandler implements M
    }
 
    /**
+    * Method for membership type migration.
+    * @param oldMembershipTypeNode
+    *         the node where membershipType properties are stored (from old structure)
+    * @throws Exception
+    */
+   void migrateMembershipType(Node oldMembershipTypeNode) throws Exception
+   {
+      MembershipType membershipType = readMembershipType(oldMembershipTypeNode);
+
+      if (findMembershipType(membershipType.getName()) != null)
+      {
+         removeMembershipType(membershipType.getName(), false);
+      }
+
+      createMembershipType(membershipType, false);
+   }
+
+   /**
     * Persists new membership type entity.
     */
    private MembershipType saveMembershipType(Session session, MembershipTypeImpl mType, boolean broadcast)
@@ -297,7 +313,7 @@ public class MembershipTypeHandlerImpl extends JCROrgServiceHandler implements M
          String newPath = utils.getMembershipTypeNodePath(newType);
 
          session.move(oldPath, newPath);
-         
+
          moveMembershipsInCache(oldType, newType);
          removeFromCache(oldType);
       }
@@ -323,8 +339,8 @@ public class MembershipTypeHandlerImpl extends JCROrgServiceHandler implements M
    {
       try
       {
-         return mType.getInternalId() != null ? session.getNodeByUUID(mType.getInternalId()) : utils.getMembershipTypeNode(session,
-            mType.getName());
+         return mType.getInternalId() != null ? session.getNodeByUUID(mType.getInternalId()) : utils
+            .getMembershipTypeNode(session, mType.getName());
       }
       catch (ItemNotFoundException e)
       {

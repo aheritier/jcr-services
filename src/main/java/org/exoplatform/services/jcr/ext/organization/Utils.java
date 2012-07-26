@@ -115,8 +115,7 @@ public class Utils
    /**
     * Compose membership identifier. For more information see {@link MembershipImpl}
     */
-   String composeMembershipId(Node groupNode, Node refUserNode, Node refTypeNode)
-      throws RepositoryException
+   String composeMembershipId(Node groupNode, Node refUserNode, Node refTypeNode) throws RepositoryException
    {
       return groupNode.getUUID() + ',' + refUserNode.getName() + ',' + refTypeNode.getName();
    }
@@ -228,7 +227,7 @@ public class Utils
       String groupNodeId = membershipIDs[0];
       String userName = membershipIDs[1];
       String type = membershipIDs[2];
-      
+
       return new IdComponents(groupNodeId, userName, type);
    }
 
@@ -268,4 +267,3 @@ public class Utils
       }
    }
 }
-

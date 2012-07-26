@@ -202,7 +202,7 @@ public class UserProfileHandlerImpl extends JCROrgServiceHandler implements User
       {
          return null;
       }
-      
+
       UserProfile profile = readProfile(userName, profileNode);
 
       if (broadcast)
@@ -237,6 +237,46 @@ public class UserProfileHandlerImpl extends JCROrgServiceHandler implements User
       {
          session.logout();
       }
+   }
+
+   /**
+    * Migrates user profile from old storage into new.
+    * @param oldUserNode 
+    *         the node where user properties are stored (from old structure)
+    */
+   void migrateProfile(Node oldUserNode) throws Exception
+   {
+      UserProfile userProfile = new UserProfileImpl(oldUserNode.getName());
+
+      Node attrNode = null;
+      try
+      {
+         attrNode = oldUserNode.getNode(JCROrganizationServiceImpl.JOS_PROFILE + "/" + MigrationTool.JOS_ATTRIBUTES);
+      }
+      catch (PathNotFoundException e)
+      {
+         return;
+      }
+      PropertyIterator props = attrNode.getProperties();
+
+      while (props.hasNext())
+      {
+         Property prop = props.nextProperty();
+
+         // ignore system properties
+         if (!(prop.getName()).startsWith("jcr:") && !(prop.getName()).startsWith("exo:")
+            && !(prop.getName()).startsWith("jos:"))
+         {
+            userProfile.setAttribute(prop.getName(), prop.getString());
+         }
+      }
+
+      if (findUserProfileByName(userProfile.getUserName()) != null)
+      {
+         removeUserProfile(userProfile.getUserName(), false);
+      }
+
+      saveUserProfile(userProfile, false);
    }
 
    /**

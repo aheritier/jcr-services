@@ -18,7 +18,6 @@ package org.exoplatform.services.jcr.ext.organization;
 
 import org.exoplatform.services.organization.OrganizationService;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -201,13 +200,7 @@ public class TestMultipleRepositories extends AbstractOrganizationServiceTest
       // Check repository not prepared
       if (!storageSession.getRootNode().hasNode(organizationService.getStoragePath().substring(1)))
       {
-         Node storage =
-            storageSession.getRootNode().addNode(organizationService.getStoragePath().substring(1),
-               "jos:organizationStorage");
-
-         storage.addNode(JCROrganizationServiceImpl.STORAGE_JOS_USERS, "jos:organizationUsers");
-         storage.addNode(JCROrganizationServiceImpl.STORAGE_JOS_GROUPS, "jos:organizationGroups");
-         storage.addNode(JCROrganizationServiceImpl.STORAGE_JOS_MEMBERSHIP_TYPES, "jos:organizationMembershipTypes");
+         organizationService.createStructure();
 
          storageSession.save();
       }

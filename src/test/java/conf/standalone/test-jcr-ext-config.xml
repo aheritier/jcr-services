@@ -7,7 +7,7 @@
       <workspaces>
         <workspace name="ws">
           <!-- for system storage -->
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr"/>
               <property name="dialect" value="hsqldb"/>
@@ -16,12 +16,13 @@
               <property name="swap-directory" value="target/temp/swap/ws"/>
             </properties>
           </container>
-          <cache enabled="true">
-            <properties>
-              <property name="max-size" value="5k"/>
-              <property name="live-time" value="1h"/>
-            </properties>
-          </cache>
+            <cache enabled="true"
+              class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+              <properties>
+                 <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-config.xml" />
+                 <property name="jbosscache-shareable" value="true" />
+              </properties>
+            </cache>          
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="index-dir" value="target/temp/index/ws" />
@@ -45,7 +46,7 @@
         </workspace>
 
         <workspace name="ws1">
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr"/>
               <property name="dialect" value="hsqldb"/>
@@ -54,12 +55,13 @@
               <property name="swap-directory" value="target/temp/swap/ws1"/>
             </properties>
           </container>
-          <cache enabled="true">
-            <properties>
-              <property name="max-size" value="5k"/>
-              <property name="live-time" value="1h"/>
-            </properties>
-          </cache>
+            <cache enabled="true"
+              class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+              <properties>
+                 <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-config.xml" />
+                 <property name="jbosscache-shareable" value="true" />
+              </properties>
+            </cache>   
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="index-dir" value="target/temp/index/ws1" />
@@ -83,7 +85,7 @@
         </workspace>
 
         <workspace name="ws2" auto-init-root-nodetype="nt:unstructured">
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr"/>
               <property name="dialect" value="hsqldb"/>
@@ -92,12 +94,13 @@
               <property name="swap-directory" value="target/temp/swap/ws2"/>
             </properties>
           </container>
-          <cache enabled="true">
-            <properties>
-              <property name="max-size" value="5k"/>
-              <property name="live-time" value="1h"/>
-            </properties>
-          </cache>
+            <cache enabled="true"
+              class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+              <properties>
+                 <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-config.xml" />
+                 <property name="jbosscache-shareable" value="true" />
+              </properties>
+            </cache> 
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="index-dir" value="target/temp/index/ws2" />
@@ -121,7 +124,7 @@
         </workspace>
 
         <workspace name="ws3" auto-init-root-nodetype="nt:unstructured">
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr"/>
               <property name="dialect" value="hsqldb"/>
@@ -130,12 +133,13 @@
               <property name="swap-directory" value="target/temp/swap/ws3"/>
             </properties>
           </container>
-          <cache enabled="true">
-            <properties>
-              <property name="max-size" value="5k"/>
-              <property name="live-time" value="1h"/>
-            </properties>
-          </cache>
+            <cache enabled="true"
+              class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+              <properties>
+                 <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-config.xml" />
+                 <property name="jbosscache-shareable" value="true" />
+              </properties>
+            </cache>  
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="index-dir" value="target/temp/index/ws3" />
@@ -159,7 +163,7 @@
         </workspace>
 
         <workspace name="ws4" auto-init-root-nodetype="nt:unstructured">
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr"/>
               <property name="dialect" value="hsqldb"/>
@@ -168,12 +172,13 @@
               <property name="swap-directory" value="target/temp/swap/ws4"/>
             </properties>
           </container>
-          <cache enabled="true">
-            <properties>
-              <property name="max-size" value="5k"/>
-              <property name="live-time" value="1h"/>
-            </properties>
-          </cache>
+            <cache enabled="true"
+              class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+              <properties>
+                 <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-config.xml" />
+                 <property name="jbosscache-shareable" value="true" />
+              </properties>
+            </cache>  
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="index-dir" value="target/temp/index/ws4" />
@@ -197,7 +202,7 @@
         </workspace>
 
         <workspace name="ws5" auto-init-root-nodetype="nt:unstructured">
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr"/>
               <property name="dialect" value="hsqldb"/>
@@ -206,15 +211,55 @@
               <property name="swap-directory" value="target/temp/swap/ws5"/>
             </properties>
           </container>
-          <cache enabled="true">
-            <properties>
-              <property name="max-size" value="5k"/>
-              <property name="live-time" value="1h"/>
-            </properties>
-          </cache>
+            <cache enabled="true"
+              class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+              <properties>
+                 <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-config.xml" />
+                 <property name="jbosscache-shareable" value="true" />
+              </properties>
+            </cache>  
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="index-dir" value="target/temp/index/ws5" />
+            </properties>
+          </query-handler>
+          <lock-manager class="org.exoplatform.services.jcr.impl.core.lock.jbosscache.CacheableLockManagerImpl">
+             <properties>
+                <property name="time-out" value="15m" />
+                <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-lock.xml" />
+                <property name="jbosscache-cl-cache.jdbc.table.name" value="jcrlocks" />
+                <property name="jbosscache-cl-cache.jdbc.table.create" value="true" />
+                <property name="jbosscache-cl-cache.jdbc.table.drop" value="false" />
+                <property name="jbosscache-cl-cache.jdbc.table.primarykey" value="jcrlocks_pk" />
+                <property name="jbosscache-cl-cache.jdbc.fqn.column" value="fqn" />
+                <property name="jbosscache-cl-cache.jdbc.node.column" value="node" />
+                <property name="jbosscache-cl-cache.jdbc.parent.column" value="parent" />
+                <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcjcr" />
+                <property name="jbosscache-shareable" value="true" />
+             </properties>
+          </lock-manager>
+        </workspace>
+        
+        <workspace name="ws6">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
+            <properties>
+              <property name="source-name" value="jdbcjcr"/>
+              <property name="dialect" value="hsqldb"/>
+              <property name="db-structure-type" value="isolated" />
+              <property name="max-buffer-size" value="200k"/>
+              <property name="swap-directory" value="target/temp/swap/ws1"/>
+            </properties>
+          </container>
+            <cache enabled="false"
+              class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+              <properties>
+                 <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-config.xml" />
+                 <property name="jbosscache-shareable" value="true" />
+              </properties>
+            </cache>   
+          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+            <properties>
+              <property name="index-dir" value="target/temp/index/ws1" />
             </properties>
           </query-handler>
           <lock-manager class="org.exoplatform.services.jcr.impl.core.lock.jbosscache.CacheableLockManagerImpl">
@@ -243,7 +288,7 @@
       <workspaces>
         <workspace name="ws">
           <!-- for system storage -->
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr2"/>
               <property name="dialect" value="hsqldb"/>
@@ -252,12 +297,13 @@
               <property name="swap-directory" value="target/temp2/swap/ws"/>
             </properties>
           </container>
-          <cache enabled="true">
-            <properties>
-              <property name="max-size" value="5k"/>
-              <property name="live-time" value="1h"/>
-            </properties>
-          </cache>
+            <cache enabled="true"
+              class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+              <properties>
+                 <property name="jbosscache-configuration" value="conf/standalone/test-jbosscache-config.xml" />
+                 <property name="jbosscache-shareable" value="true" />
+              </properties>
+            </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="index-dir" value="target/temp2/index/ws" />

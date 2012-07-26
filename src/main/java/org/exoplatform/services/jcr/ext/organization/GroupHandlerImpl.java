@@ -67,6 +67,7 @@ public class GroupHandlerImpl extends JCROrgServiceHandler implements GroupHandl
        * The group property that contain label.
        */
       public static final String JOS_LABEL = "jos:label";
+
    }
 
    /**
@@ -99,7 +100,8 @@ public class GroupHandlerImpl extends JCROrgServiceHandler implements GroupHandl
    private void addChild(Session session, GroupImpl parent, GroupImpl child, boolean broadcast) throws Exception
    {
       Node parentNode = utils.getGroupNode(session, parent);
-      Node groupNode = parentNode.addNode(child.getGroupName(), JCROrganizationServiceImpl.JOS_HIERARCHY_GROUP);
+      Node groupNode =
+         parentNode.addNode(child.getGroupName(), JCROrganizationServiceImpl.JOS_HIERARCHY_GROUP_NODETYPE);
 
       String parentId = parent == null ? null : parent.getId();
 
@@ -148,7 +150,7 @@ public class GroupHandlerImpl extends JCROrgServiceHandler implements GroupHandl
       {
          return group;
       }
-      
+
       Session session = service.getStorageSession();
       try
       {
@@ -192,7 +194,7 @@ public class GroupHandlerImpl extends JCROrgServiceHandler implements GroupHandl
          {
             return new ArrayList<Group>();
          }
-         
+
          PropertyIterator refUserProps = userNode.getReferences();
          while (refUserProps.hasNext())
          {
@@ -314,7 +316,7 @@ public class GroupHandlerImpl extends JCROrgServiceHandler implements GroupHandl
 
       // need to minus one because of child "jos:memberships" node
       long childrenCount = ((ExtendedNode)groupNode).getNodesLazily(1).getSize() - 1;
-      
+
       if (childrenCount > 0)
       {
          throw new OrganizationServiceException("Can not remove group till children exist");
@@ -324,7 +326,7 @@ public class GroupHandlerImpl extends JCROrgServiceHandler implements GroupHandl
       {
          preDelete(group);
       }
-      
+
       removeMemberships(groupNode, broadcast);
       groupNode.remove();
       session.save();
@@ -381,6 +383,32 @@ public class GroupHandlerImpl extends JCROrgServiceHandler implements GroupHandl
       {
          session.logout();
       }
+   }
+
+   /**
+    * Method for group migration.
+    * @param oldGroupNode 
+    *         the node where group properties are stored (from old structure)
+    */
+   void migrateGroup(Node oldGroupNode) throws Exception
+   {
+      String groupName = oldGroupNode.getName();
+      String desc = utils.readString(oldGroupNode, GroupProperties.JOS_DESCRIPTION);
+      String label = utils.readString(oldGroupNode, GroupProperties.JOS_LABEL);
+      String parentId = utils.readString(oldGroupNode, MigrationTool.JOS_PARENT_ID);
+
+      GroupImpl group = new GroupImpl(groupName, parentId);
+      group.setDescription(desc);
+      group.setLabel(label);
+
+      Group parentGroup = findGroupById(group.getParentId());
+
+      if (findGroupById(group.getId()) != null)
+      {
+         removeGroup(group, false);
+      }
+
+      addChild(parentGroup, group, false);
    }
 
    /**

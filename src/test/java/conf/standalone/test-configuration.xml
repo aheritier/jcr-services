@@ -119,6 +119,7 @@
             <value>jar:/conf/ext-nodetypes-config.xml</value>
             <value>jar:/conf/jcr-audit-nodetypes.xml</value>
             <value>jar:/conf/organization-nodetypes.xml</value>
+            <value>jar:/conf/organization-nodetypes-v1.xml</value>
             <value>jar:/conf/test/nodetypes-ext-test.xml</value>
           </values-param>
         </init-params>
@@ -572,7 +573,7 @@
   
   <component>
     <key>org.exoplatform.services.organization.OrganizationService</key>
-    <type>org.exoplatform.services.jcr.ext.organization.JCROrganizationServiceImpl</type>
+    <type>org.exoplatform.services.jcr.ext.organization.TesterJCROrgService</type>
     <init-params>
       <value-param>
         <name>storage-workspace</name>

@@ -18,6 +18,7 @@ package org.exoplatform.services.jcr.ext.organization;
 
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.commons.utils.SecurityHelper;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.ext.organization.Utils.IdComponents;
 import org.exoplatform.services.organization.CacheHandler;
 import org.exoplatform.services.organization.CacheHandler.CacheType;
@@ -493,6 +494,46 @@ public class MembershipHandlerImpl extends JCROrgServiceHandler implements Membe
       finally
       {
          session.logout();
+      }
+   }
+
+   /**
+    * Migrates user memberships from old storage into new.
+    * @param oldUserNode 
+    *         the node where user properties are stored (from old structure)
+    * @throws Exception
+    */
+   void migrateMemberships(Node oldUserNode) throws Exception
+   {
+      Session session = oldUserNode.getSession();
+      NodeIterator iterator = ((ExtendedNode)oldUserNode).getNodesLazily();
+
+      while (iterator.hasNext())
+      {
+         Node oldMembershipNode = iterator.nextNode();
+
+         if (oldMembershipNode.isNodeType(MigrationTool.JOS_USER_MEMBERSHIP))
+         {
+            String oldGroupUUID = utils.readString(oldMembershipNode, MigrationTool.JOS_GROUP);
+            String oldMembershipTypeUUID =
+               utils.readString(oldMembershipNode, MembershipProperties.JOS_MEMBERSHIP_TYPE);
+
+            String userName = oldUserNode.getName();
+            String groupId = utils.readString(session.getNodeByUUID(oldGroupUUID), MigrationTool.JOS_GROUP_ID);
+            String membershipTypeName = session.getNodeByUUID(oldMembershipTypeUUID).getName();
+
+            User user = service.getUserHandler().findUserByName(userName);
+            Group group = service.getGroupHandler().findGroupById(groupId);
+            MembershipType mt = service.getMembershipTypeHandler().findMembershipType(membershipTypeName);
+
+            Membership existingMembership = findMembershipByUserGroupAndType(userName, groupId, membershipTypeName);
+            if (existingMembership != null)
+            {
+               removeMembership(existingMembership.getId(), false);
+            }
+
+            linkMembership(user, group, mt, false);
+         }
       }
    }
 

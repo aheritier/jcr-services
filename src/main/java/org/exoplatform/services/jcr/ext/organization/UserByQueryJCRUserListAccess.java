@@ -87,13 +87,14 @@ public class UserByQueryJCRUserListAccess extends JCRUserListAccess
    private QueryImpl makeQuery(Session session) throws InvalidQueryException, RepositoryException
    {
       StatementContext context = new StatementContext();
-      context.statement = new StringBuilder("SELECT * FROM jos:user");
-      
+      context.statement = new StringBuilder("SELECT * FROM ");
+      context.statement.append(JCROrganizationServiceImpl.JOS_USERS_NODETYPE);
+
       if (query.getUserName() != null)
       {
          addStringStatement(context, UserProperties.JOS_USER_NAME, query.getUserName());
       }
-      
+
       if (query.getFirstName() != null)
       {
          addStringStatement(context, UserProperties.JOS_FIRST_NAME, query.getFirstName());
@@ -113,7 +114,7 @@ public class UserByQueryJCRUserListAccess extends JCRUserListAccess
       {
          addDateStatement(context, UserProperties.JOS_LAST_LOGIN_TIME, ">=", query.getFromLoginDate());
       }
-      
+
       if (query.getToLoginDate() != null)
       {
          addDateStatement(context, UserProperties.JOS_LAST_LOGIN_TIME, "<=", query.getToLoginDate());
@@ -121,7 +122,7 @@ public class UserByQueryJCRUserListAccess extends JCRUserListAccess
 
       return (QueryImpl)session.getWorkspace().getQueryManager().createQuery(context.statement.toString(), Query.SQL);
    }
-   
+
    private void addStringStatement(StatementContext context, String field, String value)
    {
       addStatement(context, "UPPER(" + field + ")", "like", "'%" + removeAsterisk(value).toUpperCase() + "%'");
@@ -180,7 +181,7 @@ public class UserByQueryJCRUserListAccess extends JCRUserListAccess
    private class StatementContext
    {
       private StringBuilder statement;
-      
+
       private boolean hasWhere;
    }
 }
