@@ -106,6 +106,24 @@ public class MigrationTool
     */
    public static final String JOS_GROUP_ID = "jos:groupId";
 
+   private static final String MIGRATION_STATUS_NODE = "/migration00Data00Temp";
+
+   private static final String STATUS_DATA_MOVED = "mig-dataMoved";
+
+   private static final String STATUS_NEW_STRUCTURE_CREATED = "mig-newStructureCreated";
+
+   private static final String STATUS_GROUPS_MIGRATED = "mig-groupsMigrated";
+
+   private static final String STATUS_MEMBERSHIP_TYPES_MIGRATED = "mig-membershipTypesMigrated";
+
+   private static final String STATUS_USERS_MIGRATED = "mig-usersMigrated";
+
+   private static final String STATUS_USER_PROFILES_MIGRATED = "mig-userProfilesMigrated";
+
+   private static final String STATUS_USER_MEMBERSHIPS_MIGRATED = "mig-userMembershipsMigrated";
+
+   private static final String STATUS_OLD_STRUCTURE_REMOVED = "mig-oldStructureRemoved";
+
    /**
     * Logger.
     */
@@ -127,11 +145,19 @@ public class MigrationTool
    {
       try
       {
-         LOG.info("Migration started.");
+         if (LOG.isInfoEnabled())
+         {
+            LOG.info("Migration started.");
+         }
+
          prepareStructure();
          migrateData();
          cleanupStructure();
-         LOG.info("Migration completed.");
+
+         if (LOG.isInfoEnabled())
+         {
+            LOG.info("Migration completed.");
+         }
       }
       catch (Exception e)
       {
@@ -156,7 +182,7 @@ public class MigrationTool
       try
       {
 
-         return session.itemExists("/migration00Data00Temp")
+         return session.itemExists(MIGRATION_STATUS_NODE)
             || ((Node)session.getItem(service.getStoragePath())).isNodeType(JOS_ORGANIZATION_NODETYPE_OLD);
       }
       catch (PathNotFoundException e)
@@ -182,18 +208,18 @@ public class MigrationTool
       {
          HashMap<String, Boolean> status = readStatus();
 
-         if (!status.get("mig-dataMoved"))
+         if (!status.get(STATUS_DATA_MOVED))
          {
             session.rename(service.getStoragePath(), oldStoragePath);
             session.save();
-            status.put("mig-dataMoved", true);
+            status.put(STATUS_DATA_MOVED, true);
             writeStatus(status);
          }
 
-         if (!status.get("mig-newStructureCreated"))
+         if (!status.get(STATUS_NEW_STRUCTURE_CREATED))
          {
             service.createStructure();
-            status.put("mig-newStructureCreated", true);
+            status.put(STATUS_NEW_STRUCTURE_CREATED, true);
             writeStatus(status);
          }
 
@@ -212,38 +238,38 @@ public class MigrationTool
    {
       HashMap<String, Boolean> status = readStatus();
 
-      if (!status.get("mig-groupsMigrated"))
+      if (!status.get(STATUS_GROUPS_MIGRATED))
       {
          migrateGroups();
-         status.put("mig-groupsMigrated", true);
+         status.put(STATUS_GROUPS_MIGRATED, true);
          writeStatus(status);
       }
 
-      if (!status.get("mig-membershipTypesMigrated"))
+      if (!status.get(STATUS_MEMBERSHIP_TYPES_MIGRATED))
       {
          migrateMembershipTypes();
-         status.put("mig-membershipTypesMigrated", true);
+         status.put(STATUS_MEMBERSHIP_TYPES_MIGRATED, true);
          writeStatus(status);
       }
 
-      if (!status.get("mig-usersMigrated"))
+      if (!status.get(STATUS_USERS_MIGRATED))
       {
          migrateUsers();
-         status.put("mig-usersMigrated", true);
+         status.put(STATUS_USERS_MIGRATED, true);
          writeStatus(status);
       }
 
-      if (!status.get("mig-userProfilesMigrated"))
+      if (!status.get(STATUS_USER_PROFILES_MIGRATED))
       {
          migrateProfiles();
-         status.put("mig-userProfilesMigrated", true);
+         status.put(STATUS_USER_PROFILES_MIGRATED, true);
          writeStatus(status);
       }
 
-      if (!status.get("mig-userMembershipsMigrated"))
+      if (!status.get(STATUS_USER_MEMBERSHIPS_MIGRATED))
       {
          migrateMemberships();
-         status.put("mig-userMembershipsMigrated", true);
+         status.put(STATUS_USER_MEMBERSHIPS_MIGRATED, true);
          writeStatus(status);
       }
    }
@@ -410,7 +436,7 @@ public class MigrationTool
       {
          HashMap<String, Boolean> status = readStatus();
 
-         if (!status.get("mig-oldStructureRemoved"))
+         if (!status.get(STATUS_OLD_STRUCTURE_REMOVED))
          {
             NodeIterator usersIter = ((ExtendedNode)session.getItem(usersStorageOld)).getNodesLazily();
             while (usersIter.hasNext())
@@ -440,13 +466,13 @@ public class MigrationTool
             session.getItem(oldStoragePath).remove();
             session.save();
 
-            status.put("mig-oldStructureRemoved", true);
+            status.put(STATUS_OLD_STRUCTURE_REMOVED, true);
             writeStatus(status);
          }
 
-         if (session.itemExists("/migration00Data00Temp"))
+         if (session.itemExists(MIGRATION_STATUS_NODE))
          {
-            session.getItem("/migration00Data00Temp").remove();
+            session.getItem(MIGRATION_STATUS_NODE).remove();
             session.save();
          }
       }
@@ -467,15 +493,15 @@ public class MigrationTool
       Session session = service.getStorageSession();
       try
       {
-         if (!session.itemExists("/migration00Data00Temp"))
+         if (!session.itemExists(MIGRATION_STATUS_NODE))
          {
-            session.getRootNode().addNode("migration00Data00Temp", "nt:unstructured");
+            session.getRootNode().addNode(MIGRATION_STATUS_NODE, "nt:unstructured");
             session.save();
             createStatusNode();
          }
 
          HashMap<String, Boolean> status = new HashMap<String, Boolean>();
-         PropertyIterator prIter = ((Node)session.getItem("/migration00Data00Temp")).getProperties();
+         PropertyIterator prIter = ((Node)session.getItem(MIGRATION_STATUS_NODE)).getProperties();
          while (prIter.hasNext())
          {
             Property prop = prIter.nextProperty();
@@ -511,7 +537,7 @@ public class MigrationTool
       try
       {
          Set<String> keys = status.keySet();
-         Node statusNode = (Node)session.getItem("/migration00Data00Temp");
+         Node statusNode = (Node)session.getItem(MIGRATION_STATUS_NODE);
          for (String key : keys)
          {
             statusNode.setProperty(key, status.get(key));
@@ -531,17 +557,17 @@ public class MigrationTool
    private void createStatusNode() throws RepositoryException
    {
       Map<String, Boolean> status = new HashMap<String, Boolean>();
-      status.put("mig-dataMoved", false);
+      status.put(STATUS_DATA_MOVED, false);
 
-      status.put("mig-newStructureCreated", false);
+      status.put(STATUS_NEW_STRUCTURE_CREATED, false);
 
-      status.put("mig-groupsMigrated", false);
-      status.put("mig-membershipTypesMigrated", false);
-      status.put("mig-usersMigrated", false);
-      status.put("mig-userProfilesMigrated", false);
-      status.put("mig-userMembershipsMigrated", false);
+      status.put(STATUS_GROUPS_MIGRATED, false);
+      status.put(STATUS_MEMBERSHIP_TYPES_MIGRATED, false);
+      status.put(STATUS_USERS_MIGRATED, false);
+      status.put(STATUS_USER_PROFILES_MIGRATED, false);
+      status.put(STATUS_USER_MEMBERSHIPS_MIGRATED, false);
 
-      status.put("mig-oldStructureRemoved", false);
+      status.put(STATUS_OLD_STRUCTURE_REMOVED, false);
       writeStatus(status);
    }
 }
