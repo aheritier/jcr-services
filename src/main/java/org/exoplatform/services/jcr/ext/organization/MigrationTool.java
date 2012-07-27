@@ -106,7 +106,7 @@ public class MigrationTool
     */
    public static final String JOS_GROUP_ID = "jos:groupId";
 
-   private static final String MIGRATION_STATUS_NODE = "/migration00Data00Temp";
+   private static final String MIGRATION_STATUS_NODE = "migration00Data00Temp";
 
    private static final String STATUS_DATA_MOVED = "mig-dataMoved";
 
@@ -501,7 +501,7 @@ public class MigrationTool
          }
 
          HashMap<String, Boolean> status = new HashMap<String, Boolean>();
-         PropertyIterator prIter = ((Node)session.getItem(MIGRATION_STATUS_NODE)).getProperties();
+         PropertyIterator prIter = ((Node)session.getItem("/" + MIGRATION_STATUS_NODE)).getProperties();
          while (prIter.hasNext())
          {
             Property prop = prIter.nextProperty();
@@ -537,7 +537,7 @@ public class MigrationTool
       try
       {
          Set<String> keys = status.keySet();
-         Node statusNode = (Node)session.getItem(MIGRATION_STATUS_NODE);
+         Node statusNode = (Node)session.getItem("/" + MIGRATION_STATUS_NODE);
          for (String key : keys)
          {
             statusNode.setProperty(key, status.get(key));
