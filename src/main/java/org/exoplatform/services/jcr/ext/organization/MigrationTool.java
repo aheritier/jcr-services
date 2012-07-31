@@ -210,7 +210,7 @@ public class MigrationTool
 
          if (!status.get(STATUS_DATA_MOVED))
          {
-            session.rename(service.getStoragePath(), oldStoragePath);
+            session.move(service.getStoragePath(), oldStoragePath, false);
             session.save();
             status.put(STATUS_DATA_MOVED, true);
             writeStatus(status);
