@@ -220,11 +220,7 @@ public class JCROrganizationServiceImpl extends BaseOrganizationService implemen
          MigrationTool migrationTool = new MigrationTool(this);
          if (migrationTool.migrationRequired())
          {
-            if (LOG.isInfoEnabled())
-            {
-               LOG.info("Detected old organization service structure.");
-            }
-
+            LOG.info("Detected old organization service structure.");
             migrationTool.migrate();
          }
 

@@ -70,7 +70,6 @@ public class TestMigrationTool extends AbstractOrganizationServiceTest
       Session sess = testService.getStorageSession();
       try
       {
-
          MigrationTool migrationTool = new MigrationTool(testService);
 
          if (!sess.itemExists("/exo:organization"))

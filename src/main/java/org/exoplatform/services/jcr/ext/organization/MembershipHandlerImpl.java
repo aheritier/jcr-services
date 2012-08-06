@@ -517,7 +517,15 @@ public class MembershipHandlerImpl extends JCROrgServiceHandler implements Membe
             String oldGroupUUID = utils.readString(oldMembershipNode, MigrationTool.JOS_GROUP);
             String oldMembershipTypeUUID =
                utils.readString(oldMembershipNode, MembershipProperties.JOS_MEMBERSHIP_TYPE);
-
+            if (oldGroupUUID == null)
+            {
+               System.out.println(oldUserNode.getPath());
+               NodeIterator pi = oldUserNode.getNodes();
+               while (pi.hasNext())
+               {
+                  System.out.println(pi.nextNode().getPath());
+               }
+            }
             String userName = oldUserNode.getName();
             String groupId = utils.readString(session.getNodeByUUID(oldGroupUUID), MigrationTool.JOS_GROUP_ID);
             String membershipTypeName = session.getNodeByUUID(oldMembershipTypeUUID).getName();
@@ -531,7 +539,6 @@ public class MembershipHandlerImpl extends JCROrgServiceHandler implements Membe
             {
                removeMembership(existingMembership.getId(), false);
             }
-
             linkMembership(user, group, mt, false);
          }
       }
