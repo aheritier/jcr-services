@@ -223,7 +223,7 @@ public class RESTArtifactLoaderService implements ResourceContainer
       {
          if (LOG.isDebugEnabled())
             LOG.debug(e.getLocalizedMessage(), e);
-         if (ses.getUserID().equals(IdentityConstants.ANONIM))
+         if (ses == null || ses.getUserID().equals(IdentityConstants.ANONIM))
             return Response.status(Response.Status.UNAUTHORIZED).header(ExtHttpHeaders.WWW_AUTHENTICATE,
                "Basic realm=\"" + realmName + "\"").build();
          else

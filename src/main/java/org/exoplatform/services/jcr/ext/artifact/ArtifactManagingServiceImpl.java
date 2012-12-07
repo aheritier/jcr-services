@@ -1024,7 +1024,7 @@ public class ArtifactManagingServiceImpl
       {
          LOG.error("Error on creating metadata - FILE", e);
       }
-      return (temp.exists()) ? temp : null;
+      return (temp != null && temp.exists()) ? temp : null;
    }
 
    protected File createMultiMetadata(String groupId, String artifactId, String current_version, List<String> v_list)
@@ -1097,7 +1097,7 @@ public class ArtifactManagingServiceImpl
       {
          LOG.error("Error on creating metadata - FILE", e);
       }
-      return (temp.exists()) ? temp : null;
+      return (temp != null && temp.exists()) ? temp : null;
    }
 
    private String getRelativeMimeType(String key)
